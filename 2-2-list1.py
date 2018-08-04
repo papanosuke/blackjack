@@ -3,6 +3,7 @@ import random
 #  使う変数の宣言
 #  (player_hand,player_money,dealer_hand)
 #  (RANK,SUIT)
+#  (turn)
 #
 #  トランプデッキを作ってシャッフルする関数
 #  (make_deck)
@@ -28,10 +29,10 @@ import random
 while(player_money > 0):
 	#  変数の初期化
 	#  ベットする額
-	#
-	#
-	#
-	#
-	#
+	#  お互いにカードを2枚ずつ引く
+	#  プレイヤーのターン
+	#  ディーラーのターン
+	#  手札の公開
+	#  勝敗の判定
 	turn += 1
 print("ゲームオーバー")
