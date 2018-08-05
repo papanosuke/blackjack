@@ -28,13 +28,24 @@ import random
 RANK,SUIT = 0,1
 def get_point(hand):
     result = 0
+    ace_flag = False
     for card in hand:
+        if card[RANK] == 1:
+            ace_flag = True
         if card[RANK] > 10:
             num = 10
         else:
             num = card[RANK]
         result = result + num
+    if ace_flag == True and result <= 11:
+        result +=10
     return result
+#
+def print_player_hand(player_hand):
+    print("プレイヤー（",get_point(player_hand),"）：　　　")
+    for card in player_hand:
+        print("[",card[SUIT],card[RANK],"]")
+    print()
 #
 def make_deck():
     suits = ["S","H","D","C"]
@@ -59,12 +70,14 @@ def main():
 #   デッキ作成
         deck = make_deck()
         #print(deck)
-        for i in range(2):
+        for i in range(3):
     #   デッキからプレイヤーの手札へ
             player_hand.append(deck.pop())
     #   デッキからディーラーの手札へ
             dealer_hand.append(deck.pop())
-        print(player_hand)
+
+#        print(player_hand)
+        print_player_hand(player_hand)
         print(get_point(player_hand))
         print(dealer_hand)
         print(get_point(dealer_hand))
