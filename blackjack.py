@@ -47,6 +47,24 @@ def print_player_hand(player_hand):
         print("[",card[SUIT],card[RANK],"]")
     print()
 #
+def print_dealer_hand(dealer_hand,uncoverd):
+    if uncoverd:
+        print("ディーラー（",get_point(dealer_hand),"）：　　　")
+    else:
+        print("ディーラー（??）：　　　")
+#
+#uncoverd=TRUE、flagの設定で1枚目は見れる
+#uncoverdがFALSEで最初から見れない
+    #
+    flag = True
+    for card in dealer_hand:
+        if flag or uncoverd:
+            print("[",card[SUIT],card[RANK],"]")
+            flag = False
+        else:
+            print("[**]")
+    print()
+#
 def make_deck():
     suits = ["S","H","D","C"]
     ranks = range(1,14)
@@ -70,7 +88,7 @@ def main():
 #   デッキ作成
         deck = make_deck()
         #print(deck)
-        for i in range(3):
+        for i in range(2):
     #   デッキからプレイヤーの手札へ
             player_hand.append(deck.pop())
     #   デッキからディーラーの手札へ
@@ -79,7 +97,8 @@ def main():
 #        print(player_hand)
         print_player_hand(player_hand)
         print(get_point(player_hand))
-        print(dealer_hand)
+#        print(dealer_hand)
+        print_dealer_hand(dealer_hand,False)
         print(get_point(dealer_hand))
 
         turn += 1
