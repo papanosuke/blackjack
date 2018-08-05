@@ -105,9 +105,22 @@ def main():
 #        print(dealer_hand)
         print_dealer_hand(dealer_hand,False)
         print(get_point(dealer_hand))
-
-
-
+#
+#		プレイヤーターン
+        while (True):
+            op = input("スタンド：1　ヒット：2　ダブル：3>>")
+            if op == "1":
+                print("[プレイヤー：スタンド ]")
+#               スタンドの処理
+            elif op == "2":
+                print("[プレイヤー：ヒット　 ]")
+#               ヒットの処理
+            elif op == "3":
+                print("[プレイヤー：ダブル　 ]")
+#               ダブルの処理
+            else:
+                continue
+#
         turn += 1
         input("次のターンへ")
     print("ゲームオーバー")
