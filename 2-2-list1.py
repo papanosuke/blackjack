@@ -23,16 +23,26 @@ import random
 #  勝敗判定とそれに伴って変化するチップを計算する関数
 #  (win_lose)
 #
-# turn = 1
+def make_deck():
+    suits = ["S","H","D","C"]
+    ranks = range(1,14)
+    deck = [(x,y) for x in ranks for y in suits]
+    random.shuffle(deck)
+    return deck
 #
+def main():
+    turn = 1
+    player_money = 100
+    deck = make_deck()
+    print(deck)
+
 #  デッキを作る
-while(player_money > 0):
-	#  変数の初期化
-	#  ベットする額
-	#  お互いにカードを2枚ずつ引く
-	#  プレイヤーのターン
-	#  ディーラーのターン
-	#  手札の公開
-	#  勝敗の判定
-	turn += 1
-print("ゲームオーバー")
+    while(player_money > 0):
+        print("ターン：",turn)
+        print("所持金",player_money)
+        turn += 1
+        input("次のターンへ")
+    print("ゲームオーバー")
+
+if __name__ == "__main__":
+    main()
