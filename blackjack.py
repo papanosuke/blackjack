@@ -30,13 +30,18 @@ def get_point(hand):
     result = 0
     ace_flag = False
     for card in hand:
+
+		#Aが含まれているか
         if card[RANK] == 1:
             ace_flag = True
+
+		#ＪＱＫが含まれているか
         if card[RANK] > 10:
             num = 10
         else:
             num = card[RANK]
         result = result + num
+#	Aが含まれていて合計が11以下の場合、Aを11とみなして加算
     if ace_flag == True and result <= 11:
         result +=10
     return result
@@ -100,6 +105,8 @@ def main():
 #        print(dealer_hand)
         print_dealer_hand(dealer_hand,False)
         print(get_point(dealer_hand))
+
+
 
         turn += 1
         input("次のターンへ")
