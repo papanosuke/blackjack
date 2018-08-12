@@ -16,6 +16,42 @@ RANK,SUIT = 0,1
 # サブルーチン
 ##########################################################################
 ##########################################################################
+# プレイヤーターン
+##########################################################################
+def player_op(deck,player_hand,op):
+    #戻り値初期化
+    doubled,ending = False,False
+    if op == "1":
+        print("[プレイヤー：スタンド ]")
+#       スタンドの処理
+        doubled,ending = False,True
+    elif op == "2":
+        print("[プレイヤー：ヒット　 ]")
+#       ヒットの処理
+        player_hand.append(deck.pop())
+        print_player_hand(player_hand)
+        doubled,ending = False,True
+    elif op == "3":
+#       ダブルの処理
+        if len(player_hand) == 2:
+            print("[プレイヤー：ダブル　 ]")
+            player_hand.append(deck.pop())
+            print_player_hand(player_hand)
+            doubled,ending = True,True
+        else:
+            print("[ダブルはできません。]")
+#
+    if get_point(player_hand) > 21:
+        print("[プレイヤーはバストした]")
+        ending = True
+#
+    if get_point(player_hand) == 21:
+        print("[２１です！]")
+        ending = True
+#
+    return doubled,ending
+#
+##########################################################################
 # ポイント計算
 ##########################################################################
 def get_point(hand):
@@ -23,11 +59,11 @@ def get_point(hand):
     ace_flag = False
     for card in hand:
 
-		#Aが含まれているか
+        #Aが含まれているか
         if card[RANK] == 1:
             ace_flag = True
 
-		#ＪＱＫが含まれているか
+        #ＪＱＫが含まれているか
         if card[RANK] > 10:
             num = 10
         else:
@@ -65,7 +101,7 @@ def print_dealer_hand(dealer_hand,uncoverd):
             print("[",card[SUIT],card[RANK],"]")
             flag = False
         else:
-            print("[**]")
+            print("[ ** ]")
     print()
 #
 ##########################################################################
@@ -104,6 +140,7 @@ def main():
     #   デッキからプレイヤーの手札へ
             player_hand.append(deck.pop())
     #   デッキからディーラーの手札へ
+            dealer_hand.append(deck.pop())
 
 #        print(player_hand)
         print_player_hand(player_hand)
@@ -113,23 +150,14 @@ def main():
         print(get_point(dealer_hand))
 #
 #		プレイヤーターン
-        while (True):
+        while True:
             op = input("スタンド：1　ヒット：2　ダブル：3>>")
-            if op == "1":
-                print("[プレイヤー：スタンド ]")
-#               スタンドの処理
+            doubled,ending = player_op(deck,player_hand,op)
+            if doubled:
+                player_money += bet
+                bet += bet
+            if ending:
                 break
-            elif op == "2":
-                print("[プレイヤー：ヒット　 ]")
-#               ヒットの処理
-                player_hand.append(deck.pop())
-                print_player_hand(player_hand)
-            elif op == "3":
-                print("[プレイヤー：ダブル　 ]")
-#               ダブルの処理
-
-            else:
-                continue
 #
         turn += 1
         input("次のターンへ")
