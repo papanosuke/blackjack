@@ -159,6 +159,16 @@ def main():
             if ending:
                 break
 #
+#		ディーラーターン
+        while get_point(player_hand) <= 21:
+            if get_point(dealer_hand) >= 17:
+                print("[ディーラー：スタンド ]")
+                break
+            else:
+                print("[ディーラー：ヒット　 ]")
+                dealer_hand.append(deck.pop())
+            print_dealer_hand(dealer_hand,False)
+#
         turn += 1
         input("次のターンへ")
     print("ゲームオーバー")
