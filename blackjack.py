@@ -16,6 +16,26 @@ RANK,SUIT = 0,1
 # サブルーチン
 ##########################################################################
 ##########################################################################
+# 勝敗判定
+##########################################################################
+def win_lose(dealer_hand,player_hand,bet,player_money):
+    player_point = get_point(player_hand)
+    dealer_point = get_point(dealer_hand)
+    if player_point <= 21:
+        if (player_point > dealer_point) or (dealer_point > 21):
+            if player_point == 21:
+                return ("<<プレイヤーの勝ち>>",player_money + int(bet*2.5))
+            else:
+                return ("<<プレイヤーの勝ち>>",player_money + bet*2)
+        elif player_point == dealer_point:
+                return ("<<プッシュ>>",player_money + bet)
+        else:
+            return ("<<プレイヤーの負け>>",player_money)
+    else:
+        return ("<<プレイヤーの負け>>",player_money)
+                        
+#
+##########################################################################
 # プレイヤーターン
 ##########################################################################
 def player_op(deck,player_hand,op):
@@ -30,7 +50,7 @@ def player_op(deck,player_hand,op):
 #       ヒットの処理
         player_hand.append(deck.pop())
         print_player_hand(player_hand)
-        doubled,ending = False,True
+        doubled,ending = False,False
     elif op == "3":
 #       ダブルの処理
         if len(player_hand) == 2:
@@ -46,10 +66,23 @@ def player_op(deck,player_hand,op):
         ending = True
 #
     if get_point(player_hand) == 21:
-        print("[２１です！]")
+        print("[ブラックジャック２１！]")
         ending = True
 #
     return doubled,ending
+#
+##########################################################################
+# ディーラーターン
+##########################################################################
+def dealer_op(deck,player_hand,dealer_hand):
+    while get_point(player_hand) <= 21:
+        if get_point(dealer_hand) >= 17:
+            print("[ディーラー：スタンド ]")
+            break
+        else:
+            print("[ディーラー：ヒット　 ]")
+            dealer_hand.append(deck.pop())
+        print_dealer_hand(dealer_hand,False)
 #
 ##########################################################################
 # ポイント計算
@@ -120,58 +153,91 @@ def make_deck():
 def main():
     turn = 1
     player_money = 100
-
+#
+#   デッキ作成
+    deck = make_deck()
+    #print(deck)
+#
 #  デッキを作る
     while(player_money > 0):
+#
+#   ターンのはじめにターン数と所持金の情報を表示
+        print("-"*20)
         print("ターン：",turn)
-        print("所持金",player_money)
+        print("所持金：",player_money)
+        print("-"*20)
 #
 #   プレイヤーの手札格納用リスト初期化
         player_hand = []
 #   ディーラーの手札格納用リスト初期化
         dealer_hand = []
-#   デッキ作成
-        deck = make_deck()
-        #print(deck)
-        bet = 10
+#
+#   ベット
+        try:
+            bet = int(input("ベット額 > "))
+        except:
+            print("整数で入力してください")
+            continue
+#   入力値が所持金を超えていたらやり直し
+            if bet > player_money:
+                print("所持金が不足しています")
+                continue
+#   入力値がゼロより小さかったらやり直し
+            if bet > player_money:
+                print("別途できる額は１以上です")
+                continue
+#
         player_money -= bet
-
+#
+#   デッキの残りが１０枚以下ならデッキを再構築＆シャッフル
+        if len(deck) < 10:
+            deck = make_deck()
+#
         for i in range(2):
     #   デッキからプレイヤーの手札へ
             player_hand.append(deck.pop())
     #   デッキからディーラーの手札へ
             dealer_hand.append(deck.pop())
 
+#
+#   ターンのはじめにターン数と所持金の情報を表示
+        print("-"*20)
 #        print(player_hand)
         print_player_hand(player_hand)
-        print(get_point(player_hand))
+#        print(get_point(player_hand))
 #        print(dealer_hand)
         print_dealer_hand(dealer_hand,False)
-        print(get_point(dealer_hand))
+#        print(get_point(dealer_hand))
+        print("-"*20)
 #
 #		プレイヤーターン
         while True:
             op = input("スタンド：1　ヒット：2　ダブル：3>>")
             doubled,ending = player_op(deck,player_hand,op)
             if doubled:
-                player_money += bet
+                player_money -= bet
                 bet += bet
             if ending:
                 break
 #
 #		ディーラーターン
-        while get_point(player_hand) <= 21:
-            if get_point(dealer_hand) >= 17:
-                print("[ディーラー：スタンド ]")
-                break
-            else:
-                print("[ディーラー：ヒット　 ]")
-                dealer_hand.append(deck.pop())
-            print_dealer_hand(dealer_hand,False)
+        dealer_op(deck,player_hand,dealer_hand)
+#
+#       手札の情報を表示
+        print("-"*20)
+        print_player_hand(player_hand)
+        print_dealer_hand(dealer_hand,True) #ゲーム終了時はディーラーの手蓋すべてを表示
+        print("-"*20)
+#
+        message,player_money = win_lose(dealer_hand,player_hand,bet,player_money)
+        print(message)
 #
         turn += 1
         input("次のターンへ")
+#
+    print("-"*20)
     print("ゲームオーバー")
+    print("-"*20)
 
 if __name__ == "__main__":
     main()
